@@ -1,0 +1,96 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+</head>
+
+<body>
+    <br>
+    <h1 class="title">Admin</h1>
+
+    <div id="login" class="login">
+        <label for="name">Password</label>
+        <br>
+        <br>
+        <input type="text" name="password" id="password" />
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div id="users" class="users" hidden>
+
+        <br>
+        
+        <h2>Users</h5>
+        <ul id="userList"></ul>
+
+        <br>
+        <br>
+        <h3>Subscribed users</h3>
+        <ul id="subscribedUserList"></ul>
+    </div>
+
+</body>
+
+<script>
+    
+    async function login()
+    {
+        let password = document.getElementById("password").value;
+
+        let response = await fetch("http://localhost:3000/GetUsers?password=" + password);
+
+        if (response.ok)
+        {
+            let users = await response.json();
+
+            if (users != null)
+            {
+                document.getElementById("login").hidden = true;
+                document.getElementById("users").hidden = false;
+
+                let userList = document.getElementById("userList");
+                let subscribedUserList = document.getElementById("subscribedUserList");
+
+                [...users].forEach(user => {
+                    userList.innerHTML += `<li class='user'>${user.email} | Subscribed: ${user.subscribe}</li>`
+                    
+                    if (user.subscribe)
+                    {
+                        subscribedUserList.innerHTML += `<li class='user'>${user.email}</li>`
+                    }
+                })
+            }
+        }
+        
+    }
+
+</script>
+
+<style>
+
+    .title {
+        text-align: center;
+    }
+
+    .login {
+        margin: auto;
+        width: 25em;
+        border: 3px solid #73AD21;
+        padding: 5em;
+        text-align: center;
+    }
+
+    .users {
+        margin: auto;
+        width: 20em;
+        /* text-align: center; */
+    }
+
+    .user {
+        padding: 1em;
+    }
+</style>
+
+</html>
