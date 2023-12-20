@@ -35,33 +35,36 @@
 
 <script>
     
+    // funktion för att logga in
     async function login()
     {
         let password = document.getElementById("password").value;
 
         let response = await fetch("http://localhost:3000/GetUsers?password=" + password);
 
-        if (response.ok)
+        if (!response.ok)
         {
-            let users = await response.json();
+            alert("Det gick inte att hämta användarna");
+        }
 
-            if (users != null)
-            {
-                document.getElementById("login").hidden = true;
-                document.getElementById("users").hidden = false;
+        let users = await response.json();
 
-                let userList = document.getElementById("userList");
-                let subscribedUserList = document.getElementById("subscribedUserList");
+        if (users != null)
+        {
+            document.getElementById("login").hidden = true;
+            document.getElementById("users").hidden = false;
 
-                [...users].forEach(user => {
-                    userList.innerHTML += `<li class='user'>${user.email} | Subscribed: ${user.subscribe}</li>`
-                    
-                    if (user.subscribe)
-                    {
-                        subscribedUserList.innerHTML += `<li class='user'>${user.email}</li>`
-                    }
-                })
-            }
+            let userList = document.getElementById("userList");
+            let subscribedUserList = document.getElementById("subscribedUserList");
+
+            [...users].forEach(user => {
+                userList.innerHTML += `<li class='user'>${user.email} | Subscribed: ${user.subscribe}</li>`
+                
+                if (user.subscribe)
+                {
+                    subscribedUserList.innerHTML += `<li class='user'>${user.email}</li>`
+                }
+            })
         }
         
     }
@@ -85,7 +88,6 @@
     .users {
         margin: auto;
         width: 20em;
-        /* text-align: center; */
     }
 
     .user {

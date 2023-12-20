@@ -8,26 +8,32 @@ const cors = require('cors');
 const app = express();
 const PORT = 3000;
 
+// Lösenord för admin route
 const adminPassword = "admin";
 
 app.use(express.json());
 
-// app.use((req, res, next) => {
-//     res.header('Access-Control-Allow-Origin', '*');
-//     next();
-// });
 app.use(cors());
 
+// Route för att logga in, email och lösenord krävs
 app.post('/SignIn', async (req, res) => {
 
     let body = req.body;
     let email = body.email;
     let password = body.password;
-    
+
     if (email != null && password != null)
     {
-        res.status(200);
-        res.json(await mongodb.SignIn(email, password));
+        let userId = await mongodb.SignIn(email, password)
+
+        if (userId != null)
+        {
+            res.status(200);
+            res.json({id: userId});
+        } else {
+            res.status(401);
+            res.json();
+        }
     }
     else
     {
@@ -36,6 +42,7 @@ app.post('/SignIn', async (req, res) => {
     }
 });
 
+// Route för att signa upp, email och lösenord krävs
 app.post('/SignUp', async (req, res) => {
     let body = req.body;
     let email = body.email;
@@ -43,8 +50,16 @@ app.post('/SignUp', async (req, res) => {
 
     if (email != null && email.length !== 0 && password != null && password.length !== 0)
     {
-        res.status(200);
-        res.json(await mongodb.SignUp(email, password));
+        let signupSuccess = await mongodb.SignUp(email, password);
+
+        if (signupSuccess != null)
+        {
+            res.status(200);
+            res.json();
+        } else {
+            res.status(401);
+            res.json();
+        }
     }
     else
     {

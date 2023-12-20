@@ -1,12 +1,16 @@
 const { MongoClient, ObjectId } = require("mongodb");
 
+// mongodb connectionstring
 const uri = "mongodb://localhost:27017";
 
 const client = new MongoClient(uri);
+// databas namn
 const db = "newsletter";
+// collection
 const collectionName = "users";
 
 
+// funktion för att skapa användare i databasen och returnera ID
 async function SignUp(email, password)
 {
     let id = null;
@@ -33,6 +37,7 @@ async function SignUp(email, password)
     return id;
 }
 
+// Funktion för att kolla ifall en användare finns i databasen och returnera dess ID ifall den finns
 async function SignIn(email, password)
 {
     let id = null;
@@ -59,6 +64,7 @@ async function SignIn(email, password)
     return id;
 }
 
+// Funktion för att ändra en användares subscribed-flagga till tvärt om
 async function SubscribeFlip(userId)
 {
     let success = false;
@@ -90,6 +96,7 @@ async function SubscribeFlip(userId)
     return success;
 }
 
+// Funktion för att hämta användarens status för subscribe
 async function GetSubscription(userId)
 {
     let subscription = null;
@@ -100,7 +107,6 @@ async function GetSubscription(userId)
         let database = client.db(db);
         let collection = database.collection(collectionName);
 
-        // subscription = (await collection.findOne({_id: new ObjectId(userId)})).subscribe;
         subscription = (await collection.findOne({_id: new ObjectId(userId)})).subscribe;
 
 
@@ -113,6 +119,7 @@ async function GetSubscription(userId)
     return subscription;
 }
 
+// Hämta alla användare
 async function GetUsers()
 {
     let users = null;
