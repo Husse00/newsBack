@@ -8,3 +8,8 @@ Newsletter Backend repo
 
 - Kör ```npm i```
 - Kör ```node app.js```
+
+
+# ADMIN Route
+
+lösenord för admin är: admin
